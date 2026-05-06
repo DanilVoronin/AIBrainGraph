@@ -1,0 +1,19 @@
+{
+    "name": "BrainEditor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:ac20f9f5f1d339d45b0ffda1478620c2",
+        "GUID:127c9207f3cf9fc47a5f5b9b90ac3ab4"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

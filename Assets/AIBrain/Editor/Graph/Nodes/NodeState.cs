@@ -11,7 +11,6 @@ namespace Brain.Graph.Nodes
     public class NodeState : AINode
     {
         public readonly AIState AIState;
-        
         private readonly AIBrain _brain;
 
         private  AIPort<AIAction> _actionPort;
@@ -21,6 +20,7 @@ namespace Brain.Graph.Nodes
         private List<AITransition> _transitions = new List<AITransition>();
         
         private ListView _listViewActions;
+        private ListView _listViewTransitions;
         
         public NodeState(AIBrain brain)
         {
@@ -52,6 +52,7 @@ namespace Brain.Graph.Nodes
             titleContainer.Add(textField);
             
             AIState.Actions = _actions;
+            AIState.Transitions = _transitions;
         }
         
         protected override void OnDetachFromPanelEvent(DetachFromPanelEvent e)
@@ -73,6 +74,7 @@ namespace Brain.Graph.Nodes
         private void CreateOutputPorts()
         {
             CreateListViewActions();
+            CreateListViewTransitions();
         }
 
         #endregion
@@ -81,7 +83,7 @@ namespace Brain.Graph.Nodes
         private void CreateListViewActions()
         {
             // Контейнер
-            var portsContainer = new VisualElement { name = "Actions" };
+            var portsContainer = new VisualElement { name = name };
             portsContainer.style.flexDirection = FlexDirection.Column;
             
             //Мульти порт
@@ -102,8 +104,8 @@ namespace Brain.Graph.Nodes
                 itemsSource = _actions,
                 
                 // Шаблон для элемента списка (VisualElement, представляющий один порт)
-                makeItem = MakePortItem,
-                bindItem = BindPortItem,
+                makeItem = MakePortItemAction,
+                bindItem = BindPortItemAction,
 
                 // Разрешаем перетаскивание
                 reorderable = true,
@@ -121,7 +123,7 @@ namespace Brain.Graph.Nodes
             AIState.Actions = obj as List<AIAction>;
             _listViewActions.RefreshItems();
         }
-        private VisualElement MakePortItem()
+        private VisualElement MakePortItemAction()
         {
             var item = new VisualElement();
             item.style.flexDirection = FlexDirection.Row;
@@ -137,7 +139,7 @@ namespace Brain.Graph.Nodes
             
             return item;
         }
-        private void BindPortItem(VisualElement element, int index)
+        private void BindPortItemAction(VisualElement element, int index)
         {
             if (index >= 0 && index < _actions.Count)
             {
@@ -172,6 +174,106 @@ namespace Brain.Graph.Nodes
                     nodeAction.OnChangeLableAction -= RefreshActionsListView;
                     _actions.Remove(nodeAction.AIAction);
                     _listViewActions.RefreshItems();
+                }
+            }
+        }
+        #endregion
+        
+        #region Transition
+        private void CreateListViewTransitions()
+        {
+            // Контейнер
+            var portsContainer = new VisualElement { name = name };
+            portsContainer.style.flexDirection = FlexDirection.Column;
+            
+            //Мульти порт
+            _transitionPort = new AIPort<AITransition>(
+                Direction.Output,
+                Port.Capacity.Multi,
+                TransitionConnected,
+                TransitionDisconnected)
+            {
+                portName = "Transition",
+            };
+            
+            portsContainer.Add(_transitionPort);
+            
+            _listViewTransitions = new ListView()
+            {
+                // Источник данных - список портов
+                itemsSource = _transitions,
+                
+                // Шаблон для элемента списка (VisualElement, представляющий один порт)
+                makeItem = MakePortItemTransition,
+                bindItem = BindPortItemTransition,
+
+                // Разрешаем перетаскивание
+                reorderable = true,
+                showBoundCollectionSize = false, // Скрыть счетчик размера
+                showFoldoutHeader = false,       // Скрыть заголовок
+            };
+
+            _listViewTransitions.itemsChosen += TransitionListViewOnitemsChosen;
+            
+            portsContainer.Add(_listViewTransitions);
+            outputContainer.Add(portsContainer);
+        }
+        private void TransitionListViewOnitemsChosen(IEnumerable<object> obj)
+        {
+            AIState.Transitions = obj as List<AITransition>;
+            _listViewTransitions.RefreshItems();
+        }
+        private VisualElement MakePortItemTransition()
+        {
+            var item = new VisualElement();
+            item.style.flexDirection = FlexDirection.Row;
+            item.style.alignItems = Align.Center;
+
+            Label nameLabel = new Label();
+            nameLabel.style.flexGrow = 1;
+            nameLabel.AddManipulator(new Dragger());
+            
+            item.Add(nameLabel);
+
+            item.AddManipulator(new Dragger());
+            
+            return item;
+        }
+        private void BindPortItemTransition(VisualElement element, int index)
+        {
+            if (index >= 0 && index < _transitions.Count)
+            {
+                var label = element.Q<Label>();
+                label.text = $"{index + 1}. {_transitions[index].Label}";
+            }
+        }
+        
+        private void RefreshTransitionListView(string value)
+        {
+            _listViewTransitions.RefreshItems();
+        }
+        
+        private void TransitionConnected(Edge edge)
+        {
+            if(edge.input.node is NodeTransition nodeTransition)
+            {
+                if (!_transitions.Contains(nodeTransition.AITransition))
+                {
+                    nodeTransition.OnChangeLableTrasition += RefreshTransitionListView;
+                    _transitions.Add(nodeTransition.AITransition);
+                    _listViewTransitions.RefreshItems();
+                }
+            }
+        }
+        private void TransitionDisconnected(Edge edge)
+        {
+            if(edge.input.node is NodeTransition nodeTransition)
+            {
+                if (_transitions.Contains(nodeTransition.AITransition))
+                {
+                    nodeTransition.OnChangeLableTrasition -= RefreshTransitionListView;
+                    _transitions.Remove(nodeTransition.AITransition);
+                    _listViewTransitions.RefreshItems();
                 }
             }
         }

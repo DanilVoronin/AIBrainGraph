@@ -28,6 +28,7 @@ namespace Brain.Graph
                 evt.menu.ClearItems();
                 evt.menu.AppendAction("Добавить состояние", _ => AddState(worldMousePosition));
                 evt.menu.AppendAction("Добавить действие", _ => AddActionIdle(worldMousePosition));
+                evt.menu.AppendAction("Добавить переход", _ => AddTransitionNode(worldMousePosition));
             }));
             
             var miniMap = new MiniMap
@@ -109,7 +110,15 @@ namespace Brain.Graph
             AddElement(node);
             node.SetPosition(new Rect(position.x - 100, position.y - 50, 200, 150));
         }
-        
+
+        private void AddTransitionNode(Vector2 position)
+        {
+            var node = new NodeTransition();
+            AddElement(node);
+
+            node.SetPosition(new Rect(position.x - 100, position.y - 50, 200, 150));
+        }
+
         #endregion
         
         #region Init

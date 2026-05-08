@@ -15,8 +15,6 @@ namespace Brain.Graph
             _AIBrainGraph = new AIBrainGraph();
             _AIBrainGraph.StretchToParentSize();
             rootVisualElement.Add(_AIBrainGraph);
-            
-            
         }
     }
 }

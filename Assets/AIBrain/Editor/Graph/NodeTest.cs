@@ -4,12 +4,12 @@ using UnityEngine.UIElements;
 
 namespace Brain.Graph
 {
-    public class Node<T> : Node
+    public class NodeTest<T> : Node
     {
         private AIBrain _brain;
         private readonly Toggle _toggle;
 
-        public Node(string title, AIBrain brain) : base()
+        public NodeTest(string title, AIBrain brain) : base()
         {
             this.title = title;
             _brain = brain;

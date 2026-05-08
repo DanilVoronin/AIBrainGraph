@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Brain.Actions;
+using Brain.Graph.Nodes;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -10,13 +12,10 @@ namespace Brain.Graph
     {
         public Vector2 worldMousePosition;
         
-        private GameObject _currentSelectedObject;
-        private AIBrain _currentComponent;
+        private AIBrain _brain;
         
         public AIBrainGraph()
         {
-            Selection.selectionChanged += OnSelectionChanged;
-            
             Insert(0, new GridBackground());
 
             this.AddManipulator(new ContentDragger());
@@ -27,7 +26,8 @@ namespace Brain.Graph
             this.AddManipulator(new ContextualMenuManipulator(evt =>
             {
                 evt.menu.ClearItems();
-                evt.menu.AppendAction("Добавить", _ => CreateNode(worldMousePosition));
+                evt.menu.AppendAction("Добавить состояние", _ => AddState(worldMousePosition));
+                evt.menu.AppendAction("Добавить действие", _ => AddActionIdle(worldMousePosition));
             }));
             
             var miniMap = new MiniMap
@@ -42,20 +42,23 @@ namespace Brain.Graph
             miniMap.SetPosition(new Rect(10, 30, 200, 140));
             Add(miniMap);
             
-            // Set up zoom capabilities
+            // Зум
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
 
-            // Add a grid background
+            // Сетка
             GridBackground gridBackground = new GridBackground();
             Insert(0, gridBackground);
             
+            //Позиция мыши для корректного позицианирования нодов
             RegisterCallback<MouseDownEvent>(e =>
             {
                 worldMousePosition = contentViewContainer.WorldToLocal(e.mousePosition);
             });
+
+            InitGraph(Selection.activeObject);
         }
         
-        /// Проверка совместимости портов (ОБЯЗАТЕЛЬНО)
+        /// Проверка совместимости портов
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
         {
             var compatiblePorts = new List<Port>();
@@ -86,44 +89,52 @@ namespace Brain.Graph
             //
             //AddElement(node);
         }
-        
-        private void OnSelectionChanged()
+
+        #region Add
+
+        private void AddState(Vector2 position)
         {
-            object obj = Selection.activeObject;
+            var node = new NodeState(_brain);
+            AddElement(node);
+
+            node.SetPosition(new Rect(position.x - 100, position.y - 50, 200, 150));
+        }
             
-            if (obj is GameObject selectedGo && selectedGo != _currentSelectedObject)
-            {
-                _currentSelectedObject = selectedGo;
-                RefreshGraph();
-            }
-            else if (!(obj is GameObject))
-            {
-                _currentSelectedObject = null;
-                RefreshGraph();
-            }
+        private void AddActionIdle(Vector2 position)
+        {
+            var node = new NodeAction(_brain);
+            node.InitAction<ActionIdle>();
+            node.title = "ActionIdle";
+            
+            AddElement(node);
+            node.SetPosition(new Rect(position.x - 100, position.y - 50, 200, 150));
         }
         
-        private void RefreshGraph()
+        #endregion
+        
+        #region Init
+        
+        private void InitGraph(object obj)
         {
-            // Очистка текущих узлов
-            graphElements.ForEach(element => RemoveElement(element));
-
-            if (_currentSelectedObject != null)
+            if (obj is GameObject selectedObject)
             {
-                _currentComponent = _currentSelectedObject.GetComponent<AIBrain>();
+                //Создание нодов
+                CreateBrainNode(selectedObject);
+            }
+        }
 
-                if (_currentComponent != null)
+        private void CreateBrainNode(GameObject selectedObject)
+        {
+            if (selectedObject != null)
+            {
+                if (selectedObject.TryGetComponent(out _brain))
                 {
-                    // Создание узла для компонента
-                    var node = new Node<AIBrain>("Brain", _currentComponent);
-                    AddElement(node);
+                    NodeBrain nodeBrain = new NodeBrain(_brain);
+                    AddElement(nodeBrain);
                 }
             }
         }
         
-        public void RequestRepaint()
-        {
-            RefreshGraph();
-        }
+        #endregion Init
     }
 }

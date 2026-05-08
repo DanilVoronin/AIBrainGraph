@@ -1,38 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Brain.Attributes;
 using UnityEngine;
 
 namespace Brain
 {
-	/// <summary>
-	/// the AI brain is responsible from going from one state to the other based on the defined transitions. It's basically just a collection of states, and it's where you'll link all the actions, decisions, states and transitions together.
-	/// </summary>
 	[AddComponentMenu("Tools/AI/AIBrain")]
 	public class AIBrain : MonoBehaviour
 	{
+		/// <summary>
+		/// Первое состояние
+		/// </summary>
+		[NonSerialized]
+		public AIState FirstState;
+		
 		[Header("Debug")]
-		/// the collection of states
 		public List<AIState> States;
-		/// this brain's current state
 		public AIState CurrentState { get; protected set; }
-		/// the time we've spent in the current state
 		public float TimeInThisState;
 
-		/// the last known world position of the target
 		public Vector3 LastKnownTargetPosition = Vector3.zero;
 
 		[Header("State")]
-		/// whether or not this brain is active
 		public bool BrainActive = true;
 
-		[Header("Frequencies")]
-		/// the frequency (in seconds) at which to perform actions (lower values : higher frequency, high values : lower frequency but better performance)
-		//private float ActionsFrequency = 0f;
-		/// the frequency (in seconds) at which to evaluate decisions
-		//private float DecisionFrequency = 0f;
-        
 		protected AIDecision[] _decisions;
 		protected AIAction[] _actions;
-		protected AIState _initialState;
 		protected ITarget _target;
 
 		public ITarget Target 
@@ -237,9 +230,9 @@ namespace Brain
 				OnExitState();
 			}
             
-			if (States.Count > 0)
+			if (FirstState != null)
 			{
-				CurrentState = States[0];
+				CurrentState = FirstState;
 				CurrentState?.EnterState();
 			}  
 		}

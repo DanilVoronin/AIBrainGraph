@@ -38,13 +38,15 @@ namespace Brain
 		{
 			serializedObject.Update();
 
+			AIBrain brain = (AIBrain)target;
+			EditorGUILayout.LabelField("First State", brain.FirstState != null ? brain.FirstState.StateName : "null");
+			
 			_list.DoLayoutList();
 			EditorGUILayout.PropertyField(_timeInThisState);
 			EditorGUILayout.PropertyField(_brainActive);
 			
 			serializedObject.ApplyModifiedProperties();
 
-			AIBrain brain = (AIBrain)target;
 
 			EditorGUILayout.Space();
 			EditorGUILayout.LabelField("Current State: ", brain.CurrentState != null ? brain.CurrentState.StateName : "None");

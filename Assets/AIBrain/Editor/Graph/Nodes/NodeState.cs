@@ -11,7 +11,6 @@ namespace Brain.Graph.Nodes
     public class NodeState : AINode
     {
         public readonly AIState AIState;
-        private readonly AIBrain _brain;
 
         private  AIPort<AIAction> _actionPort;
         private  AIPort<AITransition> _transitionPort;
@@ -22,10 +21,9 @@ namespace Brain.Graph.Nodes
         private ListView _listViewActions;
         private ListView _listViewTransitions;
         
-        public NodeState(AIBrain brain)
+        public NodeState(AIBrain brain) : base(brain)
         {
             AIState = new AIState();
-            _brain = brain;
             
             brain.States?.Add(AIState);
             
@@ -55,7 +53,7 @@ namespace Brain.Graph.Nodes
             AIState.Transitions = _transitions;
         }
         
-        protected override void OnDetachFromPanelEvent(DetachFromPanelEvent e)
+        public override void DestroyNode()
         {
             _brain.States?.Remove(AIState);
         }
@@ -67,7 +65,7 @@ namespace Brain.Graph.Nodes
             var input = Port.Create<Edge>(
                 Orientation.Horizontal, 
                 Direction.Input, 
-                Port.Capacity.Single,
+                Port.Capacity.Multi,
                 AIState.GetType());
             inputContainer.Add(input);
         }

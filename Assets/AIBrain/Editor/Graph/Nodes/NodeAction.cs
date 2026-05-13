@@ -15,12 +15,8 @@ namespace Brain.Graph.Nodes
         
         public event Action<string> OnChangeLableAction;
 
-        private readonly AIBrain _brain;
-        
-        public NodeAction(AIBrain brain):base()
+        public NodeAction(AIBrain brain, Type action):base(brain)
         {
-            _brain = brain;
-            
             Port input = Port.Create<Edge>(
                 Orientation.Horizontal, 
                 Direction.Input, 
@@ -28,13 +24,16 @@ namespace Brain.Graph.Nodes
                 typeof(AIAction));
             
             inputContainer.Add(input);
+
+            InitAction(action);
         }
 
-        public void InitAction<T>() where T : AIAction
+        private void InitAction(Type action)
         {
             if(AIAction != null) return;
                 
-            AIAction = _brain.gameObject.AddComponent<T>();
+            //TODO
+            AIAction = (AIAction)_brain.gameObject.AddComponent(action);
             
             var textField = new TextField
             {
@@ -55,9 +54,8 @@ namespace Brain.Graph.Nodes
             titleContainer.Add(textField);
         }
 
-        protected override void OnDetachFromPanelEvent(DetachFromPanelEvent e)
+        public override void DestroyNode()
         {
-            base.OnDetachFromPanelEvent(e);
             if(AIAction != null) Object.DestroyImmediate(AIAction);
         }
     }

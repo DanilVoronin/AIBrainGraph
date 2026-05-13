@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using Brain.Actions;
 using Brain.Graph.Nodes;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System;
 
 namespace Brain.Graph
 {
@@ -15,6 +15,12 @@ namespace Brain.Graph
         private AIBrain _brain;
         
         public AIBrainGraph()
+        {
+            CreateGraph();
+            InitGraph(Selection.activeObject);
+        }
+
+        private void CreateGraph()
         {
             Insert(0, new GridBackground());
 
@@ -27,7 +33,6 @@ namespace Brain.Graph
             {
                 evt.menu.ClearItems();
                 evt.menu.AppendAction("Добавить состояние", _ => AddState(worldMousePosition));
-                evt.menu.AppendAction("Добавить действие", _ => AddActionIdle(worldMousePosition));
                 evt.menu.AppendAction("Добавить переход", _ => AddTransitionNode(worldMousePosition));
             }));
             
@@ -39,26 +44,41 @@ namespace Brain.Graph
                 windowed = false         // Отображать внутри GraphView (не в отдельном окне)
             };
     
-            // Позиционирование в правом нижнем углу
             miniMap.SetPosition(new Rect(10, 30, 200, 140));
             Add(miniMap);
             
-            // Зум
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
 
-            // Сетка
             GridBackground gridBackground = new GridBackground();
             Insert(0, gridBackground);
             
             //Позиция мыши для корректного позицианирования нодов
-            RegisterCallback<MouseDownEvent>(e =>
-            {
-                worldMousePosition = contentViewContainer.WorldToLocal(e.mousePosition);
-            });
+            RegisterCallback<MouseDownEvent>(MouseDownEvent);
 
-            InitGraph(Selection.activeObject);
+            graphViewChanged = OnGraphChange;
         }
-        
+
+        private GraphViewChange OnGraphChange(GraphViewChange change)
+        {
+            if (change.elementsToRemove != null)
+            {
+                foreach (var element in change.elementsToRemove)
+                {
+                    if (element is AINode node)
+                    {
+                        node.DestroyNode();
+                    }
+                }
+            }
+
+            return change;
+        }
+
+        private void MouseDownEvent(MouseDownEvent e)
+        {
+            worldMousePosition = contentViewContainer.WorldToLocal(e.mousePosition);
+        }
+
         /// Проверка совместимости портов
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
         {
@@ -83,14 +103,6 @@ namespace Brain.Graph
             return compatiblePorts;
         }
 
-        private void CreateNode(Vector2 center)
-        {
-            //var node = new Node<AIBrain>("Brain");
-            //node.SetPosition(new Rect(center.x - 100, center.y - 50, 200, 150));
-            //
-            //AddElement(node);
-        }
-
         #region Add
 
         private void AddState(Vector2 position)
@@ -101,11 +113,10 @@ namespace Brain.Graph
             node.SetPosition(new Rect(position.x - 100, position.y - 50, 200, 150));
         }
             
-        private void AddActionIdle(Vector2 position)
+        public void AddActionIdle(Type action, Vector2 position)
         {
-            var node = new NodeAction(_brain);
-            node.InitAction<ActionIdle>();
-            node.title = "ActionIdle";
+            var node = new NodeAction(_brain, action);
+            node.title = action.Name;
             
             AddElement(node);
             node.SetPosition(new Rect(position.x - 100, position.y - 50, 200, 150));
@@ -113,12 +124,20 @@ namespace Brain.Graph
 
         private void AddTransitionNode(Vector2 position)
         {
-            var node = new NodeTransition();
+            var node = new NodeTransition(_brain);
             AddElement(node);
 
             node.SetPosition(new Rect(position.x - 100, position.y - 50, 200, 150));
         }
 
+        private void AddDecisionNode(Vector2 position)
+        {
+            var node = new NodeDecision(_brain);
+            AddElement(node);
+
+            node.SetPosition(new Rect(position.x - 100, position.y - 50, 200, 150));
+        }
+        
         #endregion
         
         #region Init
@@ -139,11 +158,19 @@ namespace Brain.Graph
                 if (selectedObject.TryGetComponent(out _brain))
                 {
                     NodeBrain nodeBrain = new NodeBrain(_brain);
+                    
                     AddElement(nodeBrain);
+                    
+                    nodeBrain.SetPosition(new Rect(250, 250, 200, 150));
                 }
             }
         }
         
         #endregion Init
+
+        public void Close()
+        {
+            UnregisterCallback<MouseDownEvent>(MouseDownEvent);
+        }
     }
 }

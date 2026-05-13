@@ -1,5 +1,4 @@
 ﻿using UnityEditor.Experimental.GraphView;
-using UnityEngine.UIElements;
 
 namespace Brain.Graph.Nodes
 {
@@ -8,16 +7,18 @@ namespace Brain.Graph.Nodes
     /// </summary>
     public class AINode : Node
     {
-        public AINode() : base()
+        protected readonly AIBrain _brain;
+        
+        public AINode(AIBrain brain) : base()
         {
+            _brain = brain;
+            
             capabilities |= Capabilities.Selectable |
                             Capabilities.Movable |
                             Capabilities.Deletable;
-            
-            RegisterCallback<DetachFromPanelEvent>(OnDetachFromPanelEvent);
         }
 
-        protected virtual void OnDetachFromPanelEvent(DetachFromPanelEvent e)
+        public virtual void DestroyNode()
         {
             
         }

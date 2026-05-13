@@ -436,9 +436,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1228135668}
   - component: {fileID: 1228135667}
-  - component: {fileID: 1228135671}
-  - component: {fileID: 1228135670}
-  - component: {fileID: 1228135669}
   m_Layer: 0
   m_Name: Brain
   m_TagString: Untagged
@@ -459,18 +456,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   States:
-  - StateName: 
-    Actions:
-    - {fileID: 0}
-    Transitions:
-    - Label: 
-      Decision: {fileID: 0}
-      TrueState: 
-      FalseState: 
-  - StateName: 
-    Actions:
-    - {fileID: 1228135670}
-    - {fileID: 1228135669}
+  - StateName: Start
+    Actions: []
     Transitions: []
   TimeInThisState: 0
   LastKnownTargetPosition: {x: 0, y: 0, z: 0}
@@ -490,66 +477,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1228135669
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1228135666}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f6a80cbebbe4102b35184b5dd1cd295, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UpDateMode: 0
-  Label: 
-  OnEnter:
-    m_PersistentCalls:
-      m_Calls: []
-  OnExit:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &1228135670
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1228135666}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f6a80cbebbe4102b35184b5dd1cd295, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UpDateMode: 0
-  Label: 
-  OnEnter:
-    m_PersistentCalls:
-      m_Calls: []
-  OnExit:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &1228135671
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1228135666}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f6a80cbebbe4102b35184b5dd1cd295, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UpDateMode: 0
-  Label: 
-  OnEnter:
-    m_PersistentCalls:
-      m_Calls: []
-  OnExit:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -8,11 +8,8 @@ namespace Brain.Graph.Nodes
     /// </summary>
     public class NodeBrain : AINode
     {
-        public readonly AIBrain Brain;
-        
-        public NodeBrain(AIBrain brain) : base()
+        public NodeBrain(AIBrain brain) : base(brain)
         {
-            Brain = brain;
             title = "Brain";
             
             var output = new AIPort<AIState>(
@@ -31,13 +28,13 @@ namespace Brain.Graph.Nodes
         {
             if(edge.input.node is NodeState nodeState)
             {
-                Brain.FirstState = nodeState.AIState;
+                _brain.FirstState = nodeState.AIState;
             }
         }
 
         private void StateDisconnected(Edge edge)
         {
-            Brain.FirstState = null;
+            _brain.FirstState = null;
         }
 
     }

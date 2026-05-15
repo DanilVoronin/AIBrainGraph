@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -49,6 +50,10 @@ namespace Brain.Graph.Nodes
             });
             
             titleContainer.Add(textField);
+
+            _serializedObject = new SerializedObject(AIAction);
+
+            Initialize(AIAction);
         }
         
         public override void DestroyNode()

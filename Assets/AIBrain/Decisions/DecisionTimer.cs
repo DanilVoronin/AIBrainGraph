@@ -7,7 +7,8 @@ namespace Brain.Decisions
     /// </summary>
     public class DecisionTimer : AIDecision
     {
-        [field: SerializeField] public float Interval { get; private set; }
+        [field: SerializeField, Tooltip("Время срабатывания (перехода)")]
+        public float Interval { get; private set; }
         
         private float _startTime;
         

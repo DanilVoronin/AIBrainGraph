@@ -55,6 +55,8 @@ namespace Brain.Graph.Nodes
             });
             
             titleContainer.Add(textField);
+            
+            Initialize(AIDecision);
         }
     }
 }

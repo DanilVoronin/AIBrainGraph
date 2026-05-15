@@ -12,6 +12,7 @@ namespace Brain.Graph.Nodes
     public class NodeTransition : AINode
     {
         public AITransition AITransition { get; private set; }  
+        
         public event Action<string> OnChangeLableTrasition;
         
         public NodeTransition(AIBrain brain) : base(brain)
@@ -43,6 +44,21 @@ namespace Brain.Graph.Nodes
                 Direction.Input,
                 Port.Capacity.Single,
                 typeof(AITransition)));
+            
+            outputContainer.Add(new AIPort<AIDecision>(
+                Direction.Output, 
+                Port.Capacity.Single,
+                edge =>
+                {
+                    AITransition.Decision = ((NodeDecision)edge.input.node)?.AIDecision;
+                },
+                edge =>
+                {
+                    AITransition.Decision = null;
+                })
+            {
+                portName = "Decision"
+            });
             
             outputContainer.Add(new AIPort<AIState>(
                 Direction.Output, 

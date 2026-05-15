@@ -5,13 +5,14 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.Linq;
+using Brain.Graph.Nodes;
 
 namespace Brain.Graph.GUI
 {
     /// <summary>
     /// Список узлов определенного типа
     /// </summary>
-    public class AIListNodes : VisualElement
+    public class AIListNodes<TBase, TNode> : VisualElement where TNode : AINodeComponent, new()
     {
         private readonly List<Type> _nodeTypes = new List<Type>();
         private readonly ListView _nodeListView;
@@ -26,7 +27,7 @@ namespace Brain.Graph.GUI
             _root = root;
             _aIBrainGraph = aIBrainGraph;
             
-            _nodeTypes = TypeCache.GetTypesDerivedFrom<AIAction>()
+            _nodeTypes = TypeCache.GetTypesDerivedFrom<TBase>()
                 .Where(t => !t.IsAbstract)
                 .ToList();
             
@@ -183,9 +184,7 @@ namespace Brain.Graph.GUI
                 // Проверяем, находится ли курсор над GraphView
                 if (_aIBrainGraph.contentContainer.ContainsPoint(evt.mousePosition))
                 {
-                    _aIBrainGraph.AddActionIdle(
-                        _draggingNodeType, 
-                        _aIBrainGraph.contentViewContainer.WorldToLocal(evt.mousePosition));
+                    _aIBrainGraph.AddNodeComponent<TNode>(_draggingNodeType, _aIBrainGraph.contentViewContainer.WorldToLocal(evt.mousePosition));
                 }
             
                 // Удаляем preview
@@ -200,8 +199,8 @@ namespace Brain.Graph.GUI
 
         private Color GetColorForNodeType(Type type)
         {
-            if (type.Name.Contains("Start")) return Color.green;
-            if (type.Name.Contains("Decision")) return Color.yellow;
+            if (type.Name.Contains("AIAction")) return Color.green;
+            if (type.Name.Contains("AIDecision")) return Color.yellow;
             return new Color(0.3f, 0.5f, 1f);
         }
 

@@ -7,12 +7,21 @@ namespace Brain.Graph.Nodes
     /// </summary>
     public class AINode : Node
     {
-        protected readonly AIBrain _brain;
-        
-        public AINode(AIBrain brain) : base()
+        protected AIBrain _brain;
+
+        protected AINode()
+        {
+            Init();
+        }
+
+        protected AINode(AIBrain brain) : base()
         {
             _brain = brain;
-            
+            Init();
+        }
+
+        private void Init()
+        {
             capabilities |= Capabilities.Selectable |
                             Capabilities.Movable |
                             Capabilities.Deletable;

@@ -9,13 +9,13 @@ namespace Brain.Graph.Nodes
     /// <summary>
     /// Нод действия
     /// </summary>
-    public class NodeAction : AINode
+    public class NodeAction : AINodeComponent
     {
         public AIAction AIAction { get; private set; }
         
         public event Action<string> OnChangeLableAction;
 
-        public NodeAction(AIBrain brain, Type action):base(brain)
+        public NodeAction()
         {
             Port input = Port.Create<Edge>(
                 Orientation.Horizontal, 
@@ -24,16 +24,13 @@ namespace Brain.Graph.Nodes
                 typeof(AIAction));
             
             inputContainer.Add(input);
-
-            InitAction(action);
         }
-
-        private void InitAction(Type action)
+        
+        public override void Setup(AIBrain brain, Type component)
         {
-            if(AIAction != null) return;
-                
-            //TODO
-            AIAction = (AIAction)_brain.gameObject.AddComponent(action);
+            _brain = brain;
+            
+            AIAction = (AIAction)_brain.gameObject.AddComponent(component);
             
             var textField = new TextField
             {
@@ -53,7 +50,7 @@ namespace Brain.Graph.Nodes
             
             titleContainer.Add(textField);
         }
-
+        
         public override void DestroyNode()
         {
             if(AIAction != null) Object.DestroyImmediate(AIAction);

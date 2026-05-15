@@ -1,4 +1,5 @@
 using Brain.Graph.GUI;
+using Brain.Graph.Nodes;
 using UnityEditor;
 using UnityEngine.UIElements;
 
@@ -50,7 +51,8 @@ namespace Brain.Graph
             //    _nodeListView.Q<TextField>().SetValueWithoutNotify(evt.newValue));
             //nodePalette.Add(searchField);
 
-            nodePalette.Add(new AIListNodes("Actions", _AIBrainGraph, rootVisualElement));
+            nodePalette.Add(new AIListNodes<AIAction, NodeAction>("Actions", _AIBrainGraph, rootVisualElement));
+            nodePalette.Add(new AIListNodes<AIDecision, NodeDecision>("Decision", _AIBrainGraph, rootVisualElement));
         }
         
         private void OnDestroy()

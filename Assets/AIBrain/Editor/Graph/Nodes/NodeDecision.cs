@@ -9,13 +9,13 @@ namespace Brain.Graph.Nodes
     /// <summary>
     /// Нод решения (условия для перехода)
     /// </summary>
-    public class NodeDecision : AINode
+    public class NodeDecision : AINodeComponent
     {
-        public AIAction AIAction { get; private set; }
+        public AIDecision AIDecision { get; private set; }
         
-        public event Action<string> OnChangeLableAction;
+        public event Action<string> OnChangeLableDecision;
 
-        public NodeDecision(AIBrain brain):base(brain)
+        public NodeDecision()
         {
             Port input = Port.Create<Edge>(
                 Orientation.Horizontal, 
@@ -29,7 +29,32 @@ namespace Brain.Graph.Nodes
 
         public override void DestroyNode()
         {
-            //if(AIAction != null) Object.DestroyImmediate(AIAction);
+            if(AIDecision != null) Object.DestroyImmediate(AIDecision);
+        }
+
+        public override void Setup(AIBrain brain, Type component)
+        {
+            _brain = brain;
+            
+            AIDecision = (AIDecision)_brain.gameObject.AddComponent(component);
+            
+            var textField = new TextField
+            {
+                value = AIDecision.Label,
+                style =
+                {
+                    unityTextAlign = TextAnchor.MiddleCenter,
+                    width = 100,
+                }
+            };
+
+            textField.RegisterCallback<ChangeEvent<string>>(evt =>
+            {
+                AIDecision.Label = evt.newValue;
+                OnChangeLableDecision?.Invoke(evt.newValue);
+            });
+            
+            titleContainer.Add(textField);
         }
     }
 }

@@ -105,6 +105,24 @@ namespace Brain.Graph
 
         #region Add
 
+        /// <summary>
+        /// Создает компонентый нод 
+        /// </summary>
+        /// <param name="position">Позиция нода</param>
+        /// <typeparam name="TNode">Тип нода</typeparam>
+        public void AddNodeComponent<TNode>(Type component, Vector2 position)  
+            where TNode : AINodeComponent, new()
+        {
+            var node = new TNode
+            {
+                title = component.Name
+            };
+            node.Setup(_brain, component);
+            
+            AddElement(node);
+            node.SetPosition(new Rect(position.x - 100, position.y - 50, 200, 150));
+        }
+
         private void AddState(Vector2 position)
         {
             var node = new NodeState(_brain);
@@ -113,15 +131,6 @@ namespace Brain.Graph
             node.SetPosition(new Rect(position.x - 100, position.y - 50, 200, 150));
         }
             
-        public void AddActionIdle(Type action, Vector2 position)
-        {
-            var node = new NodeAction(_brain, action);
-            node.title = action.Name;
-            
-            AddElement(node);
-            node.SetPosition(new Rect(position.x - 100, position.y - 50, 200, 150));
-        }
-
         private void AddTransitionNode(Vector2 position)
         {
             var node = new NodeTransition(_brain);
@@ -130,14 +139,6 @@ namespace Brain.Graph
             node.SetPosition(new Rect(position.x - 100, position.y - 50, 200, 150));
         }
 
-        private void AddDecisionNode(Vector2 position)
-        {
-            var node = new NodeDecision(_brain);
-            AddElement(node);
-
-            node.SetPosition(new Rect(position.x - 100, position.y - 50, 200, 150));
-        }
-        
         #endregion
         
         #region Init

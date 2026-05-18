@@ -12,8 +12,8 @@ namespace Brain.Graph.Nodes
     {
         public readonly AIState AIState;
 
-        private  AIPort<AIAction> _actionPort;
-        private  AIPort<AITransition> _transitionPort;
+        public AIPort<AIAction> AIActionPort { get; private set; }
+        public  AIPort<AITransition> AITransitionPort { get; private set; }
         
         private List<AIAction> _actions = new List<AIAction>();
         private List<AITransition> _transitions = new List<AITransition>();
@@ -21,11 +21,9 @@ namespace Brain.Graph.Nodes
         private ListView _listViewActions;
         private ListView _listViewTransitions;
         
-        public NodeState(AIBrain brain) : base(brain)
+        public NodeState(AIBrain brain, AIState aiState) : base(brain)
         {
-            AIState = new AIState();
-            
-            brain.States?.Add(AIState);
+            AIState = aiState;
             
             title = "State";
 
@@ -49,8 +47,8 @@ namespace Brain.Graph.Nodes
             
             titleContainer.Add(textField);
             
-            AIState.Actions = _actions;
-            AIState.Transitions = _transitions;
+            _actions = AIState.Actions;
+            _transitions = AIState.Transitions;
         }
         
         public override void DestroyNode()
@@ -85,7 +83,7 @@ namespace Brain.Graph.Nodes
             portsContainer.style.flexDirection = FlexDirection.Column;
             
             //Мульти порт
-            _actionPort = new AIPort<AIAction>(
+            AIActionPort = new AIPort<AIAction>(
                 Direction.Output,
                 Port.Capacity.Multi,
                 ActionConnected,
@@ -94,7 +92,7 @@ namespace Brain.Graph.Nodes
                 portName = "Action",
             };
             
-            portsContainer.Add(_actionPort);
+            portsContainer.Add(AIActionPort);
             
             _listViewActions = new ListView()
             {
@@ -185,7 +183,7 @@ namespace Brain.Graph.Nodes
             portsContainer.style.flexDirection = FlexDirection.Column;
             
             //Мульти порт
-            _transitionPort = new AIPort<AITransition>(
+            AITransitionPort = new AIPort<AITransition>(
                 Direction.Output,
                 Port.Capacity.Multi,
                 TransitionConnected,
@@ -194,7 +192,7 @@ namespace Brain.Graph.Nodes
                 portName = "Transition",
             };
             
-            portsContainer.Add(_transitionPort);
+            portsContainer.Add(AITransitionPort);
             
             _listViewTransitions = new ListView()
             {

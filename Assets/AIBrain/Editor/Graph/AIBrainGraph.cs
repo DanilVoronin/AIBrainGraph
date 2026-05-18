@@ -5,6 +5,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System;
+using System.Linq;
 
 namespace Brain.Graph
 {
@@ -13,11 +14,15 @@ namespace Brain.Graph
         public Vector2 worldMousePosition;
         
         private AIBrain _brain;
+
+        private float x = 250, y = 250;
         
         public AIBrainGraph()
         {
             CreateGraph();
             InitGraph(Selection.activeObject);
+            
+            Load(_brain);
         }
 
         private void CreateGraph()
@@ -125,7 +130,10 @@ namespace Brain.Graph
 
         private void AddState(Vector2 position)
         {
-            var node = new NodeState(_brain);
+            AIState state = new AIState();
+            _brain.States?.Add(state);
+            
+            var node = new NodeState(_brain, state);
             AddElement(node);
 
             node.SetPosition(new Rect(position.x - 100, position.y - 50, 200, 150));
@@ -133,7 +141,7 @@ namespace Brain.Graph
             
         private void AddTransitionNode(Vector2 position)
         {
-            var node = new NodeTransition(_brain);
+            var node = new NodeTransition(_brain, new AITransition());
             AddElement(node);
 
             node.SetPosition(new Rect(position.x - 100, position.y - 50, 200, 150));
@@ -162,12 +170,90 @@ namespace Brain.Graph
                     
                     AddElement(nodeBrain);
                     
-                    nodeBrain.SetPosition(new Rect(250, 250, 200, 150));
+                    nodeBrain.SetPosition(new Rect(x, y, 200, 150));
+                    x += 300;
                 }
             }
         }
         
         #endregion Init
+
+        #region Load
+
+        private void Load(AIBrain brain)
+        {
+            //Ищем на объекте все действия и условия перехода,
+            //Если какие объекты не настроены в brain но есть на игровом объекте, отрисовываем их отдельно
+            List<AIAction> actions = brain.GetComponentsInChildren<AIAction>(true).ToList();
+            List<AIDecision> decisions = brain.GetComponentsInChildren<AIDecision>(true).ToList();
+
+            foreach (var state in _brain.States)
+            {
+                if(state is null) continue;
+                
+                NodeState nodeState = CreateNodeState(state);
+                nodeState.SetPosition(new Rect(x, y, 200, 150));
+                
+                float posY = y;
+                x += 500;
+                
+                foreach (var action in state.Actions)
+                {
+                    if(actions.Contains(action)) actions.Remove(action);
+                    
+                    NodeAction nodeAction = CreateNodeAction(action);
+                    
+                    nodeAction.SetPosition(new Rect(x, posY, 200, 150));
+                    nodeAction.title = action.GetType().Name;
+                    posY += 300;
+                    
+                    Edge edge = new Edge()
+                    {
+                        output = nodeState.AIActionPort,
+                        input = nodeAction.AIStatePort
+                    };
+                    AddElement(edge);
+                }
+
+                foreach (var transition in state.Transitions)
+                {
+                    NodeTransition nodeTransition = CreateNodeTransition(transition);
+                    nodeTransition.SetPosition(new Rect(x, posY, 200, 150));
+                    posY += 300;
+                    
+                    Edge edge = new Edge()
+                    {
+                        output = nodeState.AITransitionPort,
+                        input = nodeTransition.AITransitionPort
+                    };
+                    AddElement(edge);
+                }
+            }
+        }
+
+        private NodeState CreateNodeState(AIState state)
+        {
+            var nodeState = new NodeState(_brain, state);
+            AddElement(nodeState);
+            return nodeState;
+        }
+
+        private NodeAction CreateNodeAction(AIAction action)
+        {
+            NodeAction nodeAction = new NodeAction();
+            nodeAction.Setup(_brain, action);
+            AddElement(nodeAction);
+            return nodeAction;
+        }
+
+        private NodeTransition CreateNodeTransition(AITransition transition)
+        {
+            NodeTransition nodeTransition = new NodeTransition(_brain, transition);
+            AddElement(nodeTransition);
+            return nodeTransition;
+        }
+
+        #endregion
 
         public void Close()
         {

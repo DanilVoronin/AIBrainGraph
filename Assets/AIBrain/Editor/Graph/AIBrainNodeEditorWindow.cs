@@ -9,7 +9,7 @@ namespace Brain.Graph
     {
         private AIBrainGraph _AIBrainGraph;
         
-        [MenuItem("AIBrain/AIBrainGraph")]
+        // [MenuItem("AIBrain/AIBrainGraph")]
         public static void ShowWindow() => GetWindow<AIBrainNodeEditorWindow>("AIBrain");
 
         public void CreateGUI()

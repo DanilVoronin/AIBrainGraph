@@ -1,5 +1,7 @@
-﻿using Tools.Editor;
+﻿using Brain.Graph;
+using Tools.Editor;
 using UnityEditor;
+using UnityEngine;
 
 namespace Brain
 {
@@ -36,6 +38,11 @@ namespace Brain
 
 		public override void OnInspectorGUI()
 		{
+			if (GUILayout.Button("Open AI graph"))
+			{
+				AIBrainNodeEditorWindow.ShowWindow();
+			}
+			
 			serializedObject.Update();
 
 			AIBrain brain = (AIBrain)target;

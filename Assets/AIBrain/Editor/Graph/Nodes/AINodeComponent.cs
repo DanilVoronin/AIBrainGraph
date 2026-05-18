@@ -24,6 +24,12 @@ namespace Brain.Graph.Nodes
         /// <param name="component">Компонент</param>
         /// <typeparam name="T">Тип компоненты</typeparam>
         public abstract void Setup(AIBrain brain, Type component);
+        /// <summary>
+        /// Настройка по созданному компоненту
+        /// </summary>
+        /// <param name="brain"></param>
+        /// <param name="component"></param>
+        public abstract void Setup(AIBrain brain, Component component);
         
         protected void Initialize(Component obj)
         {

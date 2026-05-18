@@ -35,9 +35,19 @@ namespace Brain.Graph.Nodes
         public override void Setup(AIBrain brain, Type component)
         {
             _brain = brain;
-            
             AIDecision = (AIDecision)_brain.gameObject.AddComponent(component);
-            
+            CreateGUI();
+        }
+
+        public override void Setup(AIBrain brain, Component component)
+        {
+            _brain = brain;
+            AIDecision = (AIDecision)component;
+            CreateGUI();
+        }
+
+        private void CreateGUI()
+        {
             var textField = new TextField
             {
                 value = AIDecision.Label,

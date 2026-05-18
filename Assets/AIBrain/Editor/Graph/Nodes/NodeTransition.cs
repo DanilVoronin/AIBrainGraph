@@ -15,11 +15,13 @@ namespace Brain.Graph.Nodes
         
         public event Action<string> OnChangeLableTrasition;
         
-        public NodeTransition(AIBrain brain) : base(brain)
+        public Port AITransitionPort { get; private set; }
+        
+        public NodeTransition(AIBrain brain, AITransition aiTransition) : base(brain)
         {
             title = "Transition";
             
-            AITransition = new AITransition();
+            AITransition = aiTransition;
             
             var textField = new TextField
             {
@@ -38,12 +40,14 @@ namespace Brain.Graph.Nodes
             });
             
             titleContainer.Add(textField);
-            
-            inputContainer.Add(Port.Create<Edge>(
+
+            AITransitionPort = Port.Create<Edge>(
                 Orientation.Horizontal,
                 Direction.Input,
                 Port.Capacity.Single,
-                typeof(AITransition)));
+                typeof(AITransition));
+            
+            inputContainer.Add(AITransitionPort);
             
             outputContainer.Add(new AIPort<AIDecision>(
                 Direction.Output, 

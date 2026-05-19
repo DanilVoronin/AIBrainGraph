@@ -12,8 +12,9 @@ namespace Brain.Graph.Nodes
     {
         public readonly AIState AIState;
 
-        public AIPort<AIAction> AIActionPort { get; private set; }
-        public  AIPort<AITransition> AITransitionPort { get; private set; }
+        public Port AIActionPort { get; private set; }
+        public Port AITransitionPort { get; private set; }
+        public Port AIInputStatePort { get; private set; }
         
         private List<AIAction> _actions = new List<AIAction>();
         private List<AITransition> _transitions = new List<AITransition>();
@@ -24,9 +25,12 @@ namespace Brain.Graph.Nodes
         public NodeState(AIBrain brain, AIState aiState) : base(brain)
         {
             AIState = aiState;
-            
+
             title = "State";
 
+            _actions = AIState.Actions;
+            _transitions = AIState.Transitions;
+            
             CreateInputPorts();
             CreateOutputPorts();
             
@@ -47,8 +51,7 @@ namespace Brain.Graph.Nodes
             
             titleContainer.Add(textField);
             
-            _actions = AIState.Actions;
-            _transitions = AIState.Transitions;
+            SetColor(AIGraphSettings.ColorNodeState);
         }
         
         public override void DestroyNode()
@@ -60,12 +63,12 @@ namespace Brain.Graph.Nodes
 
         private void CreateInputPorts()
         {
-            var input = Port.Create<Edge>(
+            AIInputStatePort = Port.Create<Edge>(
                 Orientation.Horizontal, 
                 Direction.Input, 
                 Port.Capacity.Multi,
                 AIState.GetType());
-            inputContainer.Add(input);
+            inputContainer.Add(AIInputStatePort);
         }
         private void CreateOutputPorts()
         {

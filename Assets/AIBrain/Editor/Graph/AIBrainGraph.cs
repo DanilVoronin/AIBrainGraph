@@ -14,15 +14,16 @@ namespace Brain.Graph
         public Vector2 worldMousePosition;
         
         private AIBrain _brain;
-
         private float x = 250, y = 250;
+        
+        private NodeBrain _nodeBrain;
         
         public AIBrainGraph()
         {
             CreateGraph();
             InitGraph(Selection.activeObject);
             
-            Load(_brain);
+            Load(_brain, _nodeBrain);
         }
 
         private void CreateGraph()
@@ -166,11 +167,11 @@ namespace Brain.Graph
             {
                 if (selectedObject.TryGetComponent(out _brain))
                 {
-                    NodeBrain nodeBrain = new NodeBrain(_brain);
+                    _nodeBrain = new NodeBrain(_brain);
                     
-                    AddElement(nodeBrain);
+                    AddElement(_nodeBrain);
                     
-                    nodeBrain.SetPosition(new Rect(x, y, 200, 150));
+                    _nodeBrain.SetPosition(new Rect(x, y, 200, 150));
                     x += 300;
                 }
             }
@@ -180,19 +181,32 @@ namespace Brain.Graph
 
         #region Load
 
-        private void Load(AIBrain brain)
+        private void Load(AIBrain brain, NodeBrain nodeBrain)
         {
             //Ищем на объекте все действия и условия перехода,
             //Если какие объекты не настроены в brain но есть на игровом объекте, отрисовываем их отдельно
             List<AIAction> actions = brain.GetComponentsInChildren<AIAction>(true).ToList();
             List<AIDecision> decisions = brain.GetComponentsInChildren<AIDecision>(true).ToList();
+            
+            List<NodeTransition> nodeTransitions = new ();
+            List<NodeState> nodeStates = new List<NodeState>();
 
             foreach (var state in _brain.States)
             {
                 if(state is null) continue;
                 
                 NodeState nodeState = CreateNodeState(state);
+                nodeStates.Add(nodeState);
                 nodeState.SetPosition(new Rect(x, y, 200, 150));
+
+                if (brain.FirstState == state)
+                {
+                    AddElement(new Edge()
+                    {
+                        output = nodeBrain.AIStatePort,
+                        input = nodeState.AIInputStatePort
+                    });
+                }
                 
                 float posY = y;
                 x += 500;
@@ -204,7 +218,6 @@ namespace Brain.Graph
                     NodeAction nodeAction = CreateNodeAction(action);
                     
                     nodeAction.SetPosition(new Rect(x, posY, 200, 150));
-                    nodeAction.title = action.GetType().Name;
                     posY += 300;
                     
                     Edge edge = new Edge()
@@ -217,16 +230,67 @@ namespace Brain.Graph
 
                 foreach (var transition in state.Transitions)
                 {
+                    
                     NodeTransition nodeTransition = CreateNodeTransition(transition);
                     nodeTransition.SetPosition(new Rect(x, posY, 200, 150));
-                    posY += 300;
                     
-                    Edge edge = new Edge()
+                    nodeTransitions.Add(nodeTransition);
+                    
+                    AddElement(new Edge()
                     {
                         output = nodeState.AITransitionPort,
                         input = nodeTransition.AITransitionPort
-                    };
-                    AddElement(edge);
+                    });
+
+                    if (transition.Decision != null)
+                    {
+                        if(decisions.Contains(transition.Decision)) decisions.Remove(transition.Decision);
+                       
+                        NodeDecision nodeDecision = CreateNodeDecision(transition.Decision);
+                        nodeDecision.SetPosition(new Rect(x + 300, posY, 200, 150));
+                        AddElement(nodeDecision);
+                        
+                        AddElement(new Edge()
+                        {
+                            output = nodeTransition.AIDecisionPort,
+                            input = nodeDecision.AITransitionPort
+                        });
+                    }
+                    posY += 300;
+                }
+                x += 700;
+                
+            }
+            
+            foreach (var nodeTransition in nodeTransitions)
+            {
+                CreateEdgeTransitionToState(
+                    _brain.GetAIStateByIndex(nodeTransition.AITransition.StateTrueIndex),
+                    nodeStates, 
+                    nodeTransition.TruePort);
+                
+                CreateEdgeTransitionToState(
+                    _brain.GetAIStateByIndex(nodeTransition.AITransition.StateFalseIndex),
+                    nodeStates, 
+                    nodeTransition.FalsePort);
+            }
+        }
+
+        private void CreateEdgeTransitionToState(
+            AIState state,
+            List<NodeState> nodeStates,
+            Port transitionPort)
+        {
+            if (state != null)
+            {
+                NodeState nodeState = nodeStates.FirstOrDefault(node => node.AIState == state);
+                if (nodeState != null)
+                {
+                    AddElement(new Edge()
+                    {
+                        output = transitionPort,
+                        input = nodeState.AIInputStatePort
+                    });
                 }
             }
         }
@@ -242,6 +306,7 @@ namespace Brain.Graph
         {
             NodeAction nodeAction = new NodeAction();
             nodeAction.Setup(_brain, action);
+            nodeAction.title = action.GetType().Name;
             AddElement(nodeAction);
             return nodeAction;
         }
@@ -251,6 +316,15 @@ namespace Brain.Graph
             NodeTransition nodeTransition = new NodeTransition(_brain, transition);
             AddElement(nodeTransition);
             return nodeTransition;
+        }
+
+        private NodeDecision CreateNodeDecision(AIDecision decision)
+        {
+            NodeDecision nodeDecision = new NodeDecision();
+            nodeDecision.Setup(_brain, decision);
+            nodeDecision.title = decision.GetType().Name;
+            AddElement(nodeDecision);
+            return nodeDecision;
         }
 
         #endregion

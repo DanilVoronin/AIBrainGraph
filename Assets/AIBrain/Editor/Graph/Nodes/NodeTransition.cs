@@ -16,6 +16,10 @@ namespace Brain.Graph.Nodes
         public event Action<string> OnChangeLableTrasition;
         
         public Port AITransitionPort { get; private set; }
+        public Port AIDecisionPort { get; private set; }
+        
+        public Port TruePort { get; private set; }
+        public Port FalsePort { get; private set; }
         
         public NodeTransition(AIBrain brain, AITransition aiTransition) : base(brain)
         {
@@ -48,9 +52,9 @@ namespace Brain.Graph.Nodes
                 typeof(AITransition));
             
             inputContainer.Add(AITransitionPort);
-            
-            outputContainer.Add(new AIPort<AIDecision>(
-                Direction.Output, 
+
+            AIDecisionPort = new AIPort<AIDecision>(
+                Direction.Output,
                 Port.Capacity.Single,
                 edge =>
                 {
@@ -62,25 +66,31 @@ namespace Brain.Graph.Nodes
                 })
             {
                 portName = "Decision"
-            });
+            };
             
-            outputContainer.Add(new AIPort<AIState>(
-                Direction.Output, 
+            outputContainer.Add(AIDecisionPort);
+
+            TruePort = new AIPort<AIState>(
+                Direction.Output,
                 Port.Capacity.Single,
                 ConnectionTrueState,
                 DisconnectedTrueState)
             {
                 portName = "TrueState"
-            });
-            
-            outputContainer.Add(new AIPort<AIState>(
-                Direction.Output, 
+            };
+            outputContainer.Add(TruePort);
+
+            FalsePort = new AIPort<AIState>(
+                Direction.Output,
                 Port.Capacity.Single,
                 ConnectionFalseState,
                 DisconnectedFalseState)
             {
                 portName = "FalseState"
-            });
+            };
+            outputContainer.Add(FalsePort);
+            
+            SetColor(AIGraphSettings.ColorNodeTransition);
         }
         
         private void ConnectionTrueState(Edge edge)
@@ -88,12 +98,12 @@ namespace Brain.Graph.Nodes
             NodeState nodeState  = EdgeValid(edge, Direction.Input);
             if (nodeState != null)
             {
-                AITransition.TrueState = nodeState.AIState.StateName;
+                AITransition.StateTrueIndex = _brain.States.IndexOf(nodeState.AIState);
             }
         }
         private void DisconnectedTrueState(Edge edge)
         {
-            AITransition.TrueState = string.Empty;
+            AITransition.StateTrueIndex = -1;
         }
 
         private void ConnectionFalseState(Edge edge)
@@ -101,14 +111,14 @@ namespace Brain.Graph.Nodes
             NodeState nodeState  = EdgeValid(edge, Direction.Input);
             if (nodeState != null)
             {
-                AITransition.FalseState = nodeState.AIState.StateName;
+                AITransition.StateFalseIndex = _brain.States.IndexOf(nodeState.AIState);
             }
         }
+        
         private void DisconnectedFalseState(Edge edge)
         {
-            AITransition.FalseState = string.Empty;
+            AITransition.StateFalseIndex = -1;
         }
-
 
         private NodeState EdgeValid(Edge edge, Direction direction)
         {

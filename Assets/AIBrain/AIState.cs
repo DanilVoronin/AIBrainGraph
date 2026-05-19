@@ -99,26 +99,28 @@ namespace Brain
 			if (Transitions.Count == 0) { return; }
 			for (int i = 0; i < Transitions.Count; i++) 
 			{
-				if (Transitions[i].Decision != null)
+				if (Transitions[i].Decision)
 				{
 					if (Transitions[i].Decision.Decide())
 					{
-						if (!string.IsNullOrEmpty(Transitions[i].TrueState))
+						AIState state = _brain.GetAIStateByIndex(Transitions[i].StateTrueIndex);
+						if (state != null)
 						{
-							_brain.TransitionToState(Transitions[i].TrueState);
+							_brain.TransitionToState(state);
 							break;
 						}
 					}
 					else
 					{
-						if (!string.IsNullOrEmpty(Transitions[i].FalseState))
+						AIState state = _brain.GetAIStateByIndex(Transitions[i].StateFalseIndex);
+						if (state != null)
 						{
-							_brain.TransitionToState(Transitions[i].FalseState);
+							_brain.TransitionToState(state);
 							break;
 						}
 					}
 				}                
 			}
-		}        
+		}
 	}
 }

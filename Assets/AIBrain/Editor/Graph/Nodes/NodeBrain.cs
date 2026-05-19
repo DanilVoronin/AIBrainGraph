@@ -1,5 +1,5 @@
 ﻿using UnityEditor.Experimental.GraphView;
-using UnityEngine.UIElements;
+using UnityEngine;
 
 namespace Brain.Graph.Nodes
 {
@@ -8,11 +8,13 @@ namespace Brain.Graph.Nodes
     /// </summary>
     public class NodeBrain : AINode
     {
+        public Port AIStatePort { get; private set; }
+        
         public NodeBrain(AIBrain brain) : base(brain)
         {
             title = "Brain";
             
-            var output = new AIPort<AIState>(
+            AIStatePort = new AIPort<AIState>(
                 Direction.Output,
                 Port.Capacity.Single,
                 StateConnected, 
@@ -21,7 +23,9 @@ namespace Brain.Graph.Nodes
                 portName = "FirstState"
             };
 
-            outputContainer.Add(output);
+            outputContainer.Add(AIStatePort);
+            
+            SetColor(AIGraphSettings.ColorNodeBrain);
         }
 
         private void StateConnected(Edge edge)

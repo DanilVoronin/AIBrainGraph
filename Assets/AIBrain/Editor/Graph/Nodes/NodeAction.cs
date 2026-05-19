@@ -26,6 +26,8 @@ namespace Brain.Graph.Nodes
                 typeof(AIAction));
             
             inputContainer.Add(AIStatePort);
+            
+            SetColor(AIGraphSettings.ColorNodeAction);
         }
         
         public override void Setup(AIBrain brain, Type component)

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Brain
@@ -10,8 +9,11 @@ namespace Brain
 		/// <summary>
 		/// Первое состояние
 		/// </summary>
-		[NonSerialized]
-		public AIState FirstState;
+		public AIState FirstState
+		{
+			get => GetAIStateByIndex(indexFirstState);
+			set => indexFirstState = States.IndexOf(value);
+		}
 		
 		[Header("Debug")]
 		public List<AIState> States;
@@ -27,6 +29,9 @@ namespace Brain
 		protected AIAction[] _actions;
 		protected ITarget _target;
 
+		[SerializeField]
+		private int indexFirstState = -1;
+		
 		public ITarget Target 
 		{ 
 			get
@@ -49,6 +54,17 @@ namespace Brain
 			}
 		}
 
+		/// <summary>
+		/// Возвращает состояние по индексу
+		/// </summary>
+		/// <param name="index"></param>
+		/// <returns></returns>
+		public AIState GetAIStateByIndex(int index)
+		{
+			if(States.Count == 0) return  null;
+			if (index < 0 || index >= States.Count) return null;
+			return States[index];
+		}
 		/// <summary>
 		/// Устанавливает новую цель
 		/// </summary>
@@ -125,27 +141,27 @@ namespace Brain
         /// Переходы в указанное состояние, запуск событий выхода и входа в состояния
         /// </summary>
         /// <param name="newStateName"></param>
-        public virtual void TransitionToState(string newStateName)
+        public virtual void TransitionToState(AIState newState)
 		{
 			if (CurrentState == null)
 			{
-				CurrentState = FindState(newStateName);
+				CurrentState = FindState(newState);
 				if (CurrentState != null)
 				{
 					CurrentState.EnterState();
 				}
 				return;
 			}
-			if (newStateName != CurrentState.StateName)
+			if (newState != CurrentState)
 			{
-				CurrentState.ExitState();
-				OnExitState();
+				AIState state = FindState(newState);
 
-				CurrentState = FindState(newStateName);
-				if (CurrentState != null)
+				if (state != null)
 				{
+					CurrentState.ExitState();
+					OnExitState();
 					CurrentState.EnterState();
-				}                
+				}
 			}
 		}
         /// <summary>
@@ -188,19 +204,15 @@ namespace Brain
         /// </summary>
         /// <param name="stateName"></param>
         /// <returns></returns>
-        protected AIState FindState(string stateName)
+        protected AIState FindState(AIState findState)
 		{
 			foreach (AIState state in States)
 			{
-				if (state.StateName == stateName)
+				if (state == findState)
 				{
 					return state;
 				}
 			}
-			if (stateName != "")
-			{
-				Debug.LogError("You're trying to transition to state '" + stateName + "' in " + this.gameObject.name + "'s AI Brain, but no state of this name exists. Make sure your states are named properly, and that your transitions states match existing states.");
-			}            
 			return null;
 		}
 		/// <summary>

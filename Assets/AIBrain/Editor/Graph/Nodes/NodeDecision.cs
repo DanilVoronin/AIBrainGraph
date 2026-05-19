@@ -13,17 +13,21 @@ namespace Brain.Graph.Nodes
     {
         public AIDecision AIDecision { get; private set; }
         
+        public Port AITransitionPort { get; private set; }
+        
         public event Action<string> OnChangeLableDecision;
 
         public NodeDecision()
         {
-            Port input = Port.Create<Edge>(
+            AITransitionPort = Port.Create<Edge>(
                 Orientation.Horizontal, 
                 Direction.Input, 
                 Port.Capacity.Single,
                 typeof(AIDecision));
             
-            inputContainer.Add(input);
+            inputContainer.Add(AITransitionPort);
+            
+            SetColor(AIGraphSettings.ColorNodeDecision);
         }
 
 

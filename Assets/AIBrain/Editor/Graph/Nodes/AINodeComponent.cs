@@ -15,6 +15,7 @@ namespace Brain.Graph.Nodes
         
         protected AINodeComponent()
         {
+            
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 
 namespace Brain.Graph.Nodes
 {
@@ -30,6 +31,16 @@ namespace Brain.Graph.Nodes
         public virtual void DestroyNode()
         {
             
+        }
+
+        /// <summary>
+        /// Устанавливает цвет элемента
+        /// </summary>
+        /// <param name="color"></param>
+        public void SetColor(Color color)
+        {
+            style.backgroundColor =  color;
+            elementTypeColor =  color;
         }
     }
 }

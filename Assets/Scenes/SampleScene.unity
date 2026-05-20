@@ -437,13 +437,13 @@ GameObject:
   - component: {fileID: 1228135668}
   - component: {fileID: 1228135667}
   - component: {fileID: 1228135670}
-  - component: {fileID: 1228135669}
   - component: {fileID: 1228135673}
-  - component: {fileID: 1228135672}
-  - component: {fileID: 1228135671}
   - component: {fileID: 1228135674}
-  - component: {fileID: 1228135676}
   - component: {fileID: 1228135675}
+  - component: {fileID: 1228135679}
+  - component: {fileID: 1228135678}
+  - component: {fileID: 1228135677}
+  - component: {fileID: 1228135676}
   m_Layer: 0
   m_Name: Brain
   m_TagString: Untagged
@@ -467,37 +467,16 @@ MonoBehaviour:
   - StateName: State_1
     Actions:
     - {fileID: 1228135670}
-    - {fileID: 1228135669}
     Transitions:
     - Label: Transition_01
       Decision: {fileID: 1228135673}
       StateTrueIndex: 1
-      StateFalseIndex: 2
-    - Label: Transition_02
-      Decision: {fileID: 0}
-      StateTrueIndex: -1
-      StateFalseIndex: -1
-    - Label: Transition_03
-      Decision: {fileID: 1228135672}
-      StateTrueIndex: -1
-      StateFalseIndex: -1
-    - Label: Transition_04
-      Decision: {fileID: 1228135671}
-      StateTrueIndex: -1
       StateFalseIndex: -1
   - StateName: State_2
     Actions:
     - {fileID: 1228135674}
     Transitions:
     - Label: Transition_1_state_2
-      Decision: {fileID: 0}
-      StateTrueIndex: -1
-      StateFalseIndex: -1
-  - StateName: State_3
-    Actions:
-    - {fileID: 1228135676}
-    Transitions:
-    - Label: 
       Decision: {fileID: 1228135675}
       StateTrueIndex: 0
       StateFalseIndex: -1
@@ -520,26 +499,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1228135669
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1228135666}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f6a80cbebbe4102b35184b5dd1cd295, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UpDateMode: 0
-  Label: Action_2
-  OnEnter:
-    m_PersistentCalls:
-      m_Calls: []
-  OnExit:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &1228135670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -584,46 +543,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
---- !u!114 &1228135671
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1228135666}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9faee985fc394ae48332edb96f72f2ac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnEnter:
-    m_PersistentCalls:
-      m_Calls: []
-  OnExite:
-    m_PersistentCalls:
-      m_Calls: []
-  Label: Decision_03
-  <Interval>k__BackingField: 0
---- !u!114 &1228135672
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1228135666}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9faee985fc394ae48332edb96f72f2ac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnEnter:
-    m_PersistentCalls:
-      m_Calls: []
-  OnExite:
-    m_PersistentCalls:
-      m_Calls: []
-  Label: Decision_02
-  <Interval>k__BackingField: 0
 --- !u!114 &1228135673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -643,7 +562,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   Label: Decision_01
-  <Interval>k__BackingField: 0
+  <Interval>k__BackingField: 1
 --- !u!114 &1228135674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -657,14 +576,58 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UpDateMode: 0
-  Label: State_2_Action_1
+  Label: Action_2
+  OnEnter:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 832575517}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnExit:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 832575517}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+--- !u!114 &1228135675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1228135666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9faee985fc394ae48332edb96f72f2ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   OnEnter:
     m_PersistentCalls:
       m_Calls: []
-  OnExit:
+  OnExite:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1228135675
+  Label: Decision_02
+  <Interval>k__BackingField: 1
+--- !u!114 &1228135676
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -684,7 +647,47 @@ MonoBehaviour:
       m_Calls: []
   Label: 
   <Interval>k__BackingField: 0
---- !u!114 &1228135676
+--- !u!114 &1228135677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1228135666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f6a80cbebbe4102b35184b5dd1cd295, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UpDateMode: 0
+  Label: 
+  OnEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExit:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1228135678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1228135666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9faee985fc394ae48332edb96f72f2ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExite:
+    m_PersistentCalls:
+      m_Calls: []
+  Label: 
+  <Interval>k__BackingField: 0
+--- !u!114 &1228135679
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

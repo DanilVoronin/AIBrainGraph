@@ -14,7 +14,7 @@ namespace Brain.Graph
         public Vector2 worldMousePosition;
         
         private AIBrain _brain;
-        private float x = 250, y = 250;
+        private float startX = 250, startY = 250;
         
         private NodeBrain _nodeBrain;
         
@@ -171,8 +171,7 @@ namespace Brain.Graph
                     
                     AddElement(_nodeBrain);
                     
-                    _nodeBrain.SetPosition(new Rect(x, y, 200, 150));
-                    x += 300;
+                    _nodeBrain.SetPosition(new Rect(startX, startY, 200, 150));
                 }
             }
         }
@@ -191,8 +190,13 @@ namespace Brain.Graph
             List<NodeTransition> nodeTransitions = new ();
             List<NodeState> nodeStates = new List<NodeState>();
 
+            float x = startX + 300;
+            float y = startY;
+
             foreach (var state in _brain.States)
             {
+                y = startY;
+                
                 if(state is null) continue;
                 
                 NodeState nodeState = CreateNodeState(state);
@@ -208,7 +212,6 @@ namespace Brain.Graph
                     });
                 }
                 
-                float posY = y;
                 x += 500;
                 
                 foreach (var action in state.Actions)
@@ -217,8 +220,8 @@ namespace Brain.Graph
                     
                     NodeAction nodeAction = CreateNodeAction(action);
                     
-                    nodeAction.SetPosition(new Rect(x, posY, 200, 150));
-                    posY += 300;
+                    nodeAction.SetPosition(new Rect(x, y, 200, 150));
+                    y += 300;
                     
                     Edge edge = new Edge()
                     {
@@ -232,7 +235,7 @@ namespace Brain.Graph
                 {
                     
                     NodeTransition nodeTransition = CreateNodeTransition(transition);
-                    nodeTransition.SetPosition(new Rect(x, posY, 200, 150));
+                    nodeTransition.SetPosition(new Rect(x, y, 200, 150));
                     
                     nodeTransitions.Add(nodeTransition);
                     
@@ -247,7 +250,7 @@ namespace Brain.Graph
                         if(decisions.Contains(transition.Decision)) decisions.Remove(transition.Decision);
                        
                         NodeDecision nodeDecision = CreateNodeDecision(transition.Decision);
-                        nodeDecision.SetPosition(new Rect(x + 300, posY, 200, 150));
+                        nodeDecision.SetPosition(new Rect(x + 300, y, 200, 150));
                         AddElement(nodeDecision);
                         
                         AddElement(new Edge()
@@ -256,7 +259,7 @@ namespace Brain.Graph
                             input = nodeDecision.AITransitionPort
                         });
                     }
-                    posY += 300;
+                    y += 300;
                 }
                 x += 700;
                 
@@ -273,6 +276,27 @@ namespace Brain.Graph
                     _brain.GetAIStateByIndex(nodeTransition.AITransition.StateFalseIndex),
                     nodeStates, 
                     nodeTransition.FalsePort);
+            }
+            
+            //Создаем оставшиеся не связанные ноды
+            //Так как на этом этапе неполучается получить размер элемента, в следующем кадре обновим положение
+            //Но пока так 😋
+
+            x = startX - 500; 
+            y = startY;
+            
+            foreach (var action in actions)
+            {
+                NodeAction node = CreateNodeAction(action);
+                node.SetPosition(new Rect(x, y, 200, 150));
+                y += 300;
+            }
+            
+            foreach (var decision in decisions)
+            {
+                NodeDecision node = CreateNodeDecision(decision);
+                node.SetPosition(new Rect(x, y, 200, 150));
+                y += 300;
             }
         }
 

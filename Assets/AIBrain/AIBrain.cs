@@ -160,6 +160,8 @@ namespace Brain
 				{
 					CurrentState.ExitState();
 					OnExitState();
+
+					CurrentState = state;
 					CurrentState.EnterState();
 				}
 			}

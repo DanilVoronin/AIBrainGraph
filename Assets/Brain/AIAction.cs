@@ -32,8 +32,11 @@ namespace Brain
 
 		/// <summary>
 		/// Выполнение действия
+		/// Раньше был абстрактным, но так как не всегда нажна его реализация оставлю так 😎
 		/// </summary>
-		public abstract void PerformAction();
+		public virtual void PerformAction()
+		{
+		}
 		/// <summary>
 		/// Initializes the action. Meant to be overridden
 		/// </summary>

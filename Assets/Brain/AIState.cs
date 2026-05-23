@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 namespace Brain
 {
@@ -13,9 +15,12 @@ namespace Brain
 		/// the name of the state (will be used as a reference in Transitions
 		public string StateName;
 
-        /// a list of actions to perform in this state
+		[SerializeField] private UnityEvent OnEnterState; 
+		[SerializeField] private UnityEvent OnExitState; 
+		
+        /// Список действий AI
         public List<AIAction> Actions = new List<AIAction>();
-        /// a list of transitions to evaluate to exit this state
+        /// Список переходов AI
         public List<AITransition> Transitions = new List<AITransition>();
 
 		protected AIBrain _brain;
@@ -49,6 +54,7 @@ namespace Brain
 					transition.Decision.OnEnterState();
 				}
 			}
+			OnEnterState?.Invoke();
 		}
 
 		/// <summary>
@@ -67,6 +73,7 @@ namespace Brain
 					transition.Decision.OnExitState();
 				}
 			}
+			OnExitState?.Invoke();
 		}
 
 		/// <summary>

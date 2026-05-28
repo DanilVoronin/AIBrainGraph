@@ -102,6 +102,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   States:
   - StateName: Idle
+    OnEnterState:
+      m_PersistentCalls:
+        m_Calls: []
+    OnExitState:
+      m_PersistentCalls:
+        m_Calls: []
     Actions:
     - {fileID: 8971824856990624176}
     Transitions:
@@ -110,6 +116,12 @@ MonoBehaviour:
       StateTrueIndex: 1
       StateFalseIndex: -1
   - StateName: Move
+    OnEnterState:
+      m_PersistentCalls:
+        m_Calls: []
+    OnExitState:
+      m_PersistentCalls:
+        m_Calls: []
     Actions:
     - {fileID: 8007908459227262486}
     Transitions:
@@ -118,6 +130,12 @@ MonoBehaviour:
       StateTrueIndex: 2
       StateFalseIndex: -1
   - StateName: Idle
+    OnEnterState:
+      m_PersistentCalls:
+        m_Calls: []
+    OnExitState:
+      m_PersistentCalls:
+        m_Calls: []
     Actions:
     - {fileID: 6964905480742144352}
     Transitions:
@@ -126,6 +144,12 @@ MonoBehaviour:
       StateTrueIndex: 3
       StateFalseIndex: -1
   - StateName: Move
+    OnEnterState:
+      m_PersistentCalls:
+        m_Calls: []
+    OnExitState:
+      m_PersistentCalls:
+        m_Calls: []
     Actions:
     - {fileID: 8183589540942315527}
     Transitions:
@@ -133,6 +157,37 @@ MonoBehaviour:
       Decision: {fileID: 1036447319344374443}
       StateTrueIndex: 0
       StateFalseIndex: -1
+  - StateName: 
+    OnEnterState:
+      m_PersistentCalls:
+        m_Calls: []
+    OnExitState:
+      m_PersistentCalls:
+        m_Calls: []
+    Actions: []
+    Transitions: []
+  - StateName: 
+    OnEnterState:
+      m_PersistentCalls:
+        m_Calls: []
+    OnExitState:
+      m_PersistentCalls:
+        m_Calls: []
+    Actions: []
+    Transitions:
+    - Label: 
+      Decision: {fileID: 0}
+      StateTrueIndex: -1
+      StateFalseIndex: -1
+  - StateName: 
+    OnEnterState:
+      m_PersistentCalls:
+        m_Calls: []
+    OnExitState:
+      m_PersistentCalls:
+        m_Calls: []
+    Actions: []
+    Transitions: []
   TimeInThisState: 0
   LastKnownTargetPosition: {x: 0, y: 0, z: 0}
   BrainActive: 1
@@ -295,7 +350,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
+        m_MethodName: 
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

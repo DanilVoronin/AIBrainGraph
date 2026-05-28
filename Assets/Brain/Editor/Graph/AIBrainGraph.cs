@@ -37,7 +37,19 @@ namespace Brain.Graph
             
             this.AddManipulator(new ContextualMenuManipulator(evt =>
             {
-                evt.menu.ClearItems();
+                base.BuildContextualMenu(evt);
+                
+                var toRemove = evt.menu.MenuItems()
+                    .OfType<DropdownMenuAction>()
+                    .Where(dmi => new[] { "Cut", "Delete" }.Contains(dmi.name))
+                    .ToList();
+
+                foreach (var item in toRemove)
+                    evt.menu.MenuItems().Remove(item);
+                
+                evt.menu.AppendSeparator();
+                
+                //evt.menu.ClearItems();
                 evt.menu.AppendAction("Добавить состояние", _ => AddState(worldMousePosition));
                 evt.menu.AppendAction("Добавить переход", _ => AddTransitionNode(worldMousePosition));
             }));

@@ -33,7 +33,7 @@ namespace Brain.Graph.Nodes
 
         public override void DestroyNode()
         {
-            if(AIDecision != null) Object.DestroyImmediate(AIDecision);
+            if(AIDecision != null) Object.DestroyImmediate(AIDecision, true);
         }
 
         public override void Setup(AIBrain brain, Type component)

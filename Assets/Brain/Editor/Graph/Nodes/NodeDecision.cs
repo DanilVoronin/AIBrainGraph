@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -33,7 +34,10 @@ namespace Brain.Graph.Nodes
 
         public override void DestroyNode()
         {
-            if(AIDecision != null) Object.DestroyImmediate(AIDecision, true);
+            if (AIDecision != null)
+            {
+                Undo.DestroyObjectImmediate(AIDecision);
+            }
         }
 
         public override void Setup(AIBrain brain, Type component)

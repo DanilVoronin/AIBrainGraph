@@ -391,6 +391,51 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4289126748202998, guid: 9672218ecb324c240ae58e7a390701f2, type: 3}
   m_PrefabInstance: {fileID: 65330248}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &69894181 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2287090278741790729, guid: 382468950328cfe4ba42d8bf69d848a3, type: 3}
+  m_PrefabInstance: {fileID: 1949413690}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &69894194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69894181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f6a80cbebbe4102b35184b5dd1cd295, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UpDateMode: 0
+  Label: 
+  OnEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExit:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &69894195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69894181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9faee985fc394ae48332edb96f72f2ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExite:
+    m_PersistentCalls:
+      m_Calls: []
+  Label: 
+  <Interval>k__BackingField: 0
 --- !u!1001 &92389177
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8830,6 +8875,14 @@ PrefabInstance:
       propertyPath: OnExite.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1783514058816156403, guid: 382468950328cfe4ba42d8bf69d848a3, type: 3}
+      propertyPath: States.Array.data[4].Transitions.Array.data[0].StateTrueIndex
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1783514058816156403, guid: 382468950328cfe4ba42d8bf69d848a3, type: 3}
+      propertyPath: States.Array.data[4].Transitions.Array.data[0].StateFalseIndex
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 2287090278741790729, guid: 382468950328cfe4ba42d8bf69d848a3, type: 3}
       propertyPath: m_Name
       value: Agent
@@ -9165,7 +9218,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2287090278741790729, guid: 382468950328cfe4ba42d8bf69d848a3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 69894195}
+    - targetCorrespondingSourceObject: {fileID: 2287090278741790729, guid: 382468950328cfe4ba42d8bf69d848a3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 69894194}
   m_SourcePrefab: {fileID: 100100000, guid: 382468950328cfe4ba42d8bf69d848a3, type: 3}
 --- !u!1001 &1982437693
 PrefabInstance:

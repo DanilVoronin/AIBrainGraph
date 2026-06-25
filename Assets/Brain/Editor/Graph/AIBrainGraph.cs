@@ -18,10 +18,10 @@ namespace Brain.Graph
         
         private NodeBrain _nodeBrain;
         
-        public AIBrainGraph()
+        public AIBrainGraph(GameObject selectedObject)
         {
             CreateGraph();
-            InitGraph(Selection.activeObject);
+            InitGraph(selectedObject);
             
             Load(_brain, _nodeBrain);
         }
@@ -37,17 +37,17 @@ namespace Brain.Graph
             
             this.AddManipulator(new ContextualMenuManipulator(evt =>
             {
-                base.BuildContextualMenu(evt);
-                
-                var toRemove = evt.menu.MenuItems()
-                    .OfType<DropdownMenuAction>()
-                    .Where(dmi => new[] { "Cut", "Delete" }.Contains(dmi.name))
-                    .ToList();
-
-                foreach (var item in toRemove)
-                    evt.menu.MenuItems().Remove(item);
-                
-                evt.menu.AppendSeparator();
+                //base.BuildContextualMenu(evt);
+                //
+                //var toRemove = evt.menu.MenuItems()
+                //    .OfType<DropdownMenuAction>()
+                //    .Where(dmi => new[] { "Cut", "Delete" }.Contains(dmi.name))
+                //    .ToList();
+                //
+                //foreach (var item in toRemove)
+                //    evt.menu.MenuItems().Remove(item);
+                //
+                //evt.menu.AppendSeparator();
                 
                 //evt.menu.ClearItems();
                 evt.menu.AppendAction("Добавить состояние", _ => AddState(worldMousePosition));
@@ -78,6 +78,10 @@ namespace Brain.Graph
 
         private GraphViewChange OnGraphChange(GraphViewChange change)
         {
+            int groupIndex = Undo.GetCurrentGroup();
+            Undo.SetCurrentGroupName("Delete Elements");
+            Undo.RecordObject(_brain, "Delete Elements State");
+            
             if (change.elementsToRemove != null)
             {
                 foreach (var element in change.elementsToRemove)
@@ -88,7 +92,8 @@ namespace Brain.Graph
                     }
                 }
             }
-
+            
+            Undo.CollapseUndoOperations(groupIndex);
             return change;
         }
 

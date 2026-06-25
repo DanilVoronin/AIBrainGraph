@@ -71,7 +71,10 @@ namespace Brain.Graph.Nodes
 
         public override void DestroyNode()
         {
-            if(AIAction != null) Object.DestroyImmediate(AIAction);
+            if(AIAction != null)
+            {
+                Undo.DestroyObjectImmediate(AIAction);
+            }
         }
     }
 }

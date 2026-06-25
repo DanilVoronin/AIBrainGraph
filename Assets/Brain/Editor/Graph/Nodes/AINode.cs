@@ -25,15 +25,15 @@ namespace Brain.Graph.Nodes
 
         private void Init()
         {
-            capabilities &= ~Capabilities.Deletable;
+            //capabilities &= ~Capabilities.Deletable;
             capabilities |= Capabilities.Selectable |
                             Capabilities.Movable;
             
-            this.AddManipulator(new ContextualMenuManipulator(evt =>
-            {
-                evt.menu.ClearItems();
-                evt.menu.AppendAction("Удалить", _ => RemoveSelf());
-            }));
+            //this.AddManipulator(new ContextualMenuManipulator(evt =>
+            //{
+            //    evt.menu.ClearItems();
+            //    evt.menu.AppendAction("Удалить", _ => RemoveSelf());
+            //}));
         }
         
         private void RemoveSelf()
